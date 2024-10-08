@@ -57,9 +57,17 @@ success :: Estado -> Bool
 success (_, clausulas) = if clausulas == [] then True else False
 
 -- 3. Clausula unitaria. Si "l" es una literal que pertenece a una claúsula unitaria, entonces basta con agregar "l" al modelo y seguir con la búsqueda...
-
+-- Aún no está al 100 !
 unit :: Estado -> Estado
+unit (modelo, []) = (modelo, [])
+unit (modelo, (x:xs)) = if length x == 1 
+                        then case head x of
+                            Var p -> ((p, True) : modelo, xs)
+                            Not (Var p) -> ((p, False) : modelo, xs)
+                            _     -> (modelo, xs)
+                        else (modelo, xs)
 
+                        
 -- 4. Eliminación. Si "l" es una literal que pertenece al modelo M y se tiene la clausula "l v C" entonces, dado que "l" es verdadera, "l v C" también lo es, por lo que se elimina la claúsula "l v C" del conjunto de claúsulas. 
 
 elim :: Estado -> Estado
