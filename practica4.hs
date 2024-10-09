@@ -40,9 +40,6 @@ data ArbolDPLL = Node Estado ArbolDPLL | Branch Estado ArbolDPLL ArbolDPLL | Voi
 segundoElemento :: (a, b) -> b
 segundoElemento (_, y) = y
 
-
-
-
 -- Ejercicios --
 
 -- 1. Conflicto. Determina si la claúsula vacía, representada como una lista vacia, forma parte del conjunto de cláusulas. Puesto que no existe modelo que satisfaga a la claúsula vacía, la busqueda del modelo falla. 
@@ -79,6 +76,9 @@ red :: Estado -> Estado
 -- 6. Separación. Dada una literal "l" se procede a buscar que "M", "l" sea modelo de "F", o que "M", "l^C" lo sea. 
 
 sep :: Literal -> Estado -> (Estado, Estado)
+sep (Var p) (i, xs) = ((i ++ [(p, True)], xs), (i ++ [(p, False)], xs))
+sep (Not (Var p)) (i, xs) = ((i ++ [(p, True)], xs), (i ++ [(p, False)], xs))
+
 
 -- 7. Implementación de algoritmo DPLL P2. Al ser DPLL un algoritmo no determinista, debemos definir una heurística para decidir sobre qué literal se aplicará la regla de separación. 
 
