@@ -36,6 +36,12 @@ type Estado = (Interpretacion, [Clausula])
 
 data ArbolDPLL = Node Estado ArbolDPLL | Branch Estado ArbolDPLL ArbolDPLL | Void
 
+
+-- Función para devolver el primer elemento de una tupla
+primerElemento :: (a, b) -> a
+primerElemento (x, _) = x
+
+
 --Funcion para devolver el segundo elemento de una tupla
 segundoElemento :: (a, b) -> b
 segundoElemento (_, y) = y
@@ -102,6 +108,14 @@ seleccionarAux ((l, pos, neg):rest) (litMax, maxOcurr)
     totalPos = pos
     totalNeg = neg
 
+-- Auxiliar para eliminar las complementarias del modelo
+eliminarComplementarias :: Interpretacion -> Clausula -> Clausula
+eliminarComplementarias interp clausula = [literal | literal <- clausula, not (esComplementaria literal interp)]
+  where
+    esComplementaria literal interp = case literal of
+        Var var -> any (\(v, valor) -> v == var && not valor) interp  
+        Not (Var var) -> any (\(v, valor) -> v == var && valor) interp
+
 
 -- Ejercicios --
 
@@ -135,8 +149,11 @@ elim (interp, clausulas) = (interp, [clausula | clausula <- clausulas, not (any 
     literalesInterpretacion = map (\(var, _) -> Var var) interp
 
 -- 5. Reducción. Si "l" es una literal que pertenece al modelo M y se tiene qe la claúsula (l^C) es falsa, por lo que solo es de interés saber si "C" es satisfacible.
-
-
+red :: Estado -> Estado
+red ([], clausulas) = ([], clausulas) 
+red (interp, clausulas) = (interp, clausulasReducidas)
+  where
+    clausulasReducidas = map (eliminarComplementarias interp) clausulas
 
 
 -- 6. Separación. Dada una literal "l" se procede a buscar que "M", "l" sea modelo de "F", o que "M", "l^C" lo sea. 
