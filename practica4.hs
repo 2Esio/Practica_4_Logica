@@ -117,7 +117,7 @@ success :: Estado -> Bool
 success (_, clausulas) = if clausulas == [] then True else False
 
 -- 3. Clausula unitaria. Si "l" es una literal que pertenece a una claúsula unitaria, entonces basta con agregar "l" al modelo y seguir con la búsqueda...
--- Aún no está al 100 !
+
 unit :: Estado -> Estado
 unit (modelo, []) = (modelo, [])
 unit (modelo, (x:xs)) = if length x == 1 
@@ -134,12 +134,6 @@ elim :: Estado -> Estado
 elim (interp, clausulas) = (interp, [clausula | clausula <- clausulas, not (any (`elem` literalesInterpretacion) clausula)])
   where 
     literalesInterpretacion = map (\(var, _) -> Var var) interp
---    Recordar pasar las variables: 
---    let p = Var "p"
---    let q = Var "q"
---    let r = Var "r"
---    let s = Var "s"
---    let t = Var "t"
 
 -- 5. Reducción. Si "l" es una literal que pertenece al modelo M y se tiene qe la claúsula (l^C) es falsa, por lo que solo es de interés saber si "C" es satisfacible.
 
@@ -158,9 +152,9 @@ sep (Not (Var p)) (i, xs) = ((i ++ [(p, True)], xs), (i ++ [(p, False)], xs))
 heuristicsLiteral :: [Clausula] -> Literal
 heuristicsLiteral clausulas = seleccionarLiteral (contarPosNeg clausulas)
 
-{-
+
 --Funcion para construir el arbol dpll desde un estado dado
---Deben estar ya implementadas las funciones unit,red,sep,elim y heuristicsLiteral
+
 construirArbolDPLL :: Estado -> ArbolDPLL
 construirArbolDPLL estado 
     | conflict estado = Node estado Void
@@ -176,7 +170,7 @@ construirArbolDPLL estado
 explorarArbolDPLL :: ArbolDPLL -> Estado -> Estado
 explorarArbolDPLL Void estado = estado
 explorarArbolDPLL (Node estado t) _ = explorarArbolDPLL t estado
-explorarArbolDPLL (Branch estado t1 t2) _ = if conflict x --Si hay conflicto con el lado izquierdo, devolvemos el resultado del lado derecho
+explorarArbolDPLL (Branch estado t1 t2) _ = if conflict x -- Si hay conflicto con el lado izquierdo, devolvemos el resultado del lado derecho
                                         then explorarArbolDPLL t2 estado
                                         else x
                                     where 
@@ -194,7 +188,7 @@ dpll clausulas = if conflict ultimoEstado
                     inicial = ([], clausulas)
                     arbol = construirArbolDPLL inicial
                     ultimoEstado = explorarArbolDPLL arbol inicial
--}
+
 
 
 
