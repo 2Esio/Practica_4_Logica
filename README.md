@@ -7,7 +7,7 @@
 - Etni Sarai Castro Siera 
 - Marco Flores Cid
 # NOTA:
-- En el ejercicio 3 se tiene que agrega despues de compilar:
+- En el ejercicio 3 y 4 se tiene que agrega despues de compilar:
 --    Recordar pasar las variables: 
 --    let p = Var "p"
 --    let q = Var "q"
