@@ -134,7 +134,8 @@ elim :: Estado -> Estado
 elim (interp, clausulas) = (interp, [clausula | clausula <- clausulas, not (any (`elem` literalesInterpretacion) clausula)])
   where 
     literalesInterpretacion = map (\(var, _) -> Var var) interp
---    Recordar pasar las variables: let p = Var "p"
+--    Recordar pasar las variables: 
+--    let p = Var "p"
 --    let q = Var "q"
 --    let r = Var "r"
 --    let s = Var "s"
@@ -142,7 +143,15 @@ elim (interp, clausulas) = (interp, [clausula | clausula <- clausulas, not (any 
 
 -- 5. Reducción. Si "l" es una literal que pertenece al modelo M y se tiene qe la claúsula (l^C) es falsa, por lo que solo es de interés saber si "C" es satisfacible.
 
---red :: Estado -> Estado
+red :: Estado -> Estado
+red (interp, clausulas) = 
+    (interp, [ [literal | literal <- clausula, not (estaNegada literal interp)] | clausula <- clausulas])
+  where
+    estaNegada :: Prop -> Interpretacion -> Bool
+    estaNegada (Var l) interp = (l, False) `elem` interp
+    estaNegada (Not (Var l)) interp = (l, True) `elem` interp
+    estaNegada _ _ = False
+
 
 -- 6. Separación. Dada una literal "l" se procede a buscar que "M", "l" sea modelo de "F", o que "M", "l^C" lo sea. 
 
