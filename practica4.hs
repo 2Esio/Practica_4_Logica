@@ -130,7 +130,15 @@ unit (modelo, (x:xs)) = if length x == 1
                         
 -- 4. Eliminación. Si "l" es una literal que pertenece al modelo M y se tiene la clausula "l v C" entonces, dado que "l" es verdadera, "l v C" también lo es, por lo que se elimina la claúsula "l v C" del conjunto de claúsulas. 
 
---elim :: Estado -> Estado
+elim :: Estado -> Estado
+elim (interp, clausulas) = (interp, [clausula | clausula <- clausulas, not (any (`elem` literalesInterpretacion) clausula)])
+  where 
+    literalesInterpretacion = map (\(var, _) -> Var var) interp
+--    Recordar pasar las variables: let p = Var "p"
+--    let q = Var "q"
+--    let r = Var "r"
+--    let s = Var "s"
+--    let t = Var "t"
 
 -- 5. Reducción. Si "l" es una literal que pertenece al modelo M y se tiene qe la claúsula (l^C) es falsa, por lo que solo es de interés saber si "C" es satisfacible.
 
