@@ -122,11 +122,10 @@ unit :: Estado -> Estado
 unit (modelo, []) = (modelo, [])
 unit (modelo, (x:xs)) = if length x == 1 
                         then case head x of
-                            Var p -> ((p, True) : modelo, xs)
-                            Not (Var p) -> ((p, False) : modelo, xs)
+                            Var p -> ((p, True) : modelo, filter (notElem (Var p)) xs)
+                            Not (Var p) -> ((p, False) : modelo, filter (notElem (Not (Var p))) xs)
                             _     -> (modelo, xs)
                         else (modelo, xs)
-
                         
 -- 4. Eliminación. Si "l" es una literal que pertenece al modelo M y se tiene la clausula "l v C" entonces, dado que "l" es verdadera, "l v C" también lo es, por lo que se elimina la claúsula "l v C" del conjunto de claúsulas. 
 
